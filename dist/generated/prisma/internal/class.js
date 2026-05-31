@@ -51,7 +51,7 @@ const config = {
     "clientVersion": "7.8.0",
     "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
     "activeProvider": "postgresql",
-    "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id           Int        @id @default(autoincrement())\n  email        String     @unique\n  passwordHash String\n  name         String?\n  customers    Customer[]\n  notes        Note[]\n  createdAt    DateTime   @default(now())\n}\n\nmodel Customer {\n  id        Int      @id @default(autoincrement())\n  userId    Int\n  name      String\n  email     String?\n  phone     String?\n  company   String?\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  notes     Note[]\n  createdAt DateTime @default(now())\n}\n\nmodel Note {\n  id         Int      @id @default(autoincrement())\n  customerId Int\n  userId     Int\n  body       String\n  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)\n  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  createdAt  DateTime @default(now())\n}\n",
+    "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id           Int        @id @default(autoincrement())\n  email        String     @unique\n  passwordHash String\n  name         String?\n  customers    Customer[]\n  notes        Note[]\n  createdAt    DateTime   @default(now())\n}\n\nmodel Customer {\n  id        Int      @id @default(autoincrement())\n  userId    Int\n  name      String\n  email     String?\n  phone     String?\n  company   String?\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  notes     Note[]\n  createdAt DateTime @default(now())\n}\n\nmodel Note {\n  id         Int      @id @default(autoincrement())\n  customerId Int\n  userId     Int\n  body       String\n  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)\n  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  createdAt  DateTime @default(now())\n}\n",
     "runtimeDataModel": {
         "models": {},
         "enums": {},
@@ -73,9 +73,9 @@ async function decodeBase64AsWasm(wasmBase64) {
     return new WebAssembly.Module(wasmArray);
 }
 config.compilerWasm = {
-    getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
+    getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
     getQueryCompilerWasmModule: async () => {
-        const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs");
+        const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js");
         return await decodeBase64AsWasm(wasm);
     },
     importName: "./query_compiler_fast_bg.js"

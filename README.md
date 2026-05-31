@@ -11,3 +11,4 @@
 * Prisma - the ORM for interfacing with the database
 * Express.js - used for the server 
 * JSON Web Token - used for authentication
+* Docker - used to containerize the program
